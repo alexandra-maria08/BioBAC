@@ -1,0 +1,705 @@
+
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8"/>
+<script>
+  if (localStorage.getItem('tema') === 'dark') {
+    document.addEventListener('DOMContentLoaded', () => {
+      document.body.classList.add('dark');
+    });
+  }
+</script>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>🧬 BioBAC - Contul Meu</title>
+
+<!-- PWA Manifest -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#4f46e5">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="BioBAC">
+<link rel="apple-touch-icon" href="icon-192x192.png">
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script>
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'ro',
+        includedLanguages: 'ro,en,hu',
+        layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL
+      }, 'google_translate_element');
+    }
+</script>
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+<style>
+  :root {
+    --primary-color: #4f46e5;
+    --primary-hover: #3f3cbb;
+    --secondary-color: #10b981;
+    --danger-color: #ef4444;
+    --warning-color: #f59e0b;
+    --background-light: linear-gradient(135deg, #86efac 0%, #7dd3fc 100%);
+    --background-dark: linear-gradient(135deg, #1e1e2e 0%, #2a2a3e 100%);
+    --glass-bg: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    --blur: blur(10px);
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+    background: var(--background-light);
+    color: #1f2937;
+    transition: all 0.3s ease;
+    padding: 20px;
+  }
+
+  body.dark {
+    background: var(--background-dark) !important;
+    color: #f3f4f6;
+  }
+
+  .container {
+    background: var(--glass-bg);
+    backdrop-filter: var(--blur);
+    -webkit-backdrop-filter: var(--blur);
+    border: 1px solid var(--glass-border);
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    width: 90%;
+    max-width: 450px;
+    text-align: center;
+    position: relative;
+    z-index: 10;
+    transition: all 0.3s ease;
+    animation: slideIn 0.6s ease-out;
+  }
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .dark .container {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  h2 {
+    font-size: 1.5rem;
+      color: #2c3e50;
+      font-weight: 700;
+      margin-top: 70px;
+      margin-bottom: 30px;
+      text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+      background: linear-gradient(135deg, #2c3e50, #34495e);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.2));
+    }
+
+  input, select {
+    width: 100%;
+    margin: 0.75rem 0;
+    padding: 0.875rem 1rem;
+    font-size: 1rem;
+    border-radius: 12px;
+    border: 2px solid transparent;
+    background: rgba(255, 255, 255, 0.1);
+    color: inherit;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+  }
+
+  input:focus, select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+  }
+
+  button {
+    width: 100%;
+    margin: 0.5rem 0;
+    padding: 0.875rem 1rem;
+    font-size: 1rem;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+  }
+
+  button:hover::before {
+    left: 100%;
+  }
+
+  button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  #login-btn, #signup-btn {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+    color: white;
+  }
+
+  .account-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+
+  .account-buttons button {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.875rem;
+    border-radius: 10px;
+  }
+
+  #save-btn, #save-email-btn {
+    background: linear-gradient(135deg, var(--secondary-color), #059669);
+    color: white;
+  }
+
+  #change-pass-btn {
+    background: linear-gradient(135deg, var(--warning-color), #d97706);
+    color: white;
+  }
+
+  #logout-btn {
+    background: linear-gradient(135deg, var(--danger-color), #dc2626);
+    color: white;
+  }
+
+  #delete-account-btn {
+    background: linear-gradient(135deg, #7c2d12, #991b1b);
+    color: white;
+  }
+
+  #home-btn {
+    background: linear-gradient(135deg, #0ea5e9, #0284c7);
+    color: white;
+  }
+
+  #dark-mode-btn {
+    background: linear-gradient(135deg, #6b7280, #374151);
+    color: white;
+  }
+
+  #lang-btn, #lang-btn-account {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    color: white;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  .info-label {
+    font-weight: 600;
+    margin: 1rem 0 0.5rem 0;
+    text-align: left;
+    color: var(--primary-color);
+  }
+
+  .dark .info-label {
+    color: var(--secondary-color);
+  }
+
+  /* Floating background elements */
+  .emoji-row {
+    position: fixed;
+    width: 100%;
+    font-size: 3rem;
+    opacity: 0.05;
+    text-align: center;
+    z-index: 0;
+    pointer-events: none;
+    user-select: none;
+    animation: float 8s ease-in-out infinite alternate;
+  }
+
+  .emoji-row:nth-child(1) { top: 10%; animation-delay: 0s; }
+  .emoji-row:nth-child(2) { top: 25%; animation-delay: 2s; }
+  .emoji-row:nth-child(3) { top: 40%; animation-delay: 4s; }
+  .emoji-row:nth-child(4) { top: 55%; animation-delay: 6s; }
+  .emoji-row:nth-child(5) { top: 70%; animation-delay: 8s; }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(2deg); }
+  }
+
+  /* Google Translate Elements */
+  .translate-container {
+    position: fixed;
+    top: 7px;
+    right: 7px;
+    z-index: 1000;
+  }
+
+  #google_translate_element {
+    background: var(--glass-bg);
+    backdrop-filter: var(--blur);
+    -webkit-backdrop-filter: var(--blur);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 10px;
+    animation: slideDown 0.3s ease-out;
+    transform: scale(0.9);  
+    transform-origin: top right; 
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Responsive design */
+  @media (max-width: 480px) {
+    body {
+      padding: 10px;
+    }
+    
+    .container {
+      padding: 1.5rem;
+      margin: 0;
+    }
+
+    .account-buttons {
+      grid-template-columns: 1fr;
+    }
+     
+
+    h2 {
+      font-size: 1.5rem;
+      color: #2c3e50;
+      font-weight: 700;
+      margin-top: 70px;
+      margin-bottom: 30px;
+      text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+      background: linear-gradient(135deg, #2c3e50, #34495e);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.2));
+    }
+
+    .translate-container {
+      top: 10px;
+      right: 10px;
+    }
+  }
+
+  /* Smooth scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-hover);
+  }
+</style>
+</head>
+<body>
+  <!-- Floating background elements -->
+  <div class="emoji-row">🧬🧪🧫🧬🧬🧪🧫🧬🧬🧪🧫</div>
+  <div class="emoji-row">🧫🧪🧬🧫🧬🧪🧫🧬🧪🧫🧬</div>
+  <div class="emoji-row">🧪🧬🧪🧫🧪🧬🧫🧪🧬🧫🧬</div>
+  <div class="emoji-row">🧬🧬🧪🧫🧬🧪🧬🧫🧬🧬🧪</div>
+  <div class="emoji-row">🧫🧪🧬🧫🧪🧬🧫🧪🧬🧫🧬</div>
+
+  
+
+  <div class="container" id="auth">
+    <h2 id="auth-title">🔬 Autentificare BioBAC</h2>
+    <input id="register-name" placeholder="Nume complet" type="text"/>
+    <input id="email" placeholder="Email" type="email"/>
+    <input id="password" placeholder="Parolă" type="password"/>
+    <button id="login-btn" onclick="login()">➡️ Log In</button>
+    <button id="signup-btn" onclick="signup()">✨ Creează cont</button>
+    <button id="lang-btn" onclick="toggleLanguage()">🌐 Schimbă limbă</button>
+  </div>
+
+  <div class="container hidden" id="account">
+<!-- Google Translate container -->
+  <div class="translate-container">
+    <div id="google_translate_element"></div>
+  </div>
+    <h2 id="account-title">👩‍🔬 Contul Meu</h2>
+
+    <div><div class="info-label" id="label-show-name">👤 Nume:</div><div id="show-name"></div></div>
+    <div><div class="info-label" id="label-show-email">✉️ Email:</div><div id="show-email"></div></div>
+    <hr style="margin: 1.5rem 0; border: none; height: 1px; background: var(--glass-border);"/>
+    
+    <label class="info-label" for="edit-name">Schimbă numele</label>
+    <input id="edit-name" placeholder="Nume nou" type="text"/>
+    <label class="info-label" for="edit-email">Schimbă email-ul</label>
+    <input id="edit-email" placeholder="Email nou" type="email"/>
+    <label class="info-label" for="new-password">Schimbă parola</label>
+    <input id="new-password" placeholder="Parolă nouă" type="password"/>
+
+    <div class="account-buttons">
+      <button id="save-btn" onclick="updateName()">💾 Salvează numele</button>
+      <button id="save-email-btn" onclick="updateEmail()">📧 Salvează email</button>
+      <button id="change-pass-btn" onclick="changePassword()">🔁 Schimbă parola</button>
+      <button id="lang-btn-account" onclick="toggleLanguage()">🌐 Schimbă limbă</button>
+      <button id="dark-mode-btn" onclick="toggleDarkMode()">🌓 Mod Întunecat</button>
+      <button id="logout-btn" onclick="logout()">🚪 Deconectare</button>
+      <button id="delete-account-btn" onclick="deleteAccount()">🗑️ Șterge contul</button>
+      <button id="home-btn" onclick="goHome()">🏠 Acasă</button>
+    </div>
+  </div>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyA5C-UQTHOO7CFrbzV7vMXfQTrM1iz0_CE",
+    authDomain: "biobac-cont.firebaseapp.com",
+    projectId: "biobac-cont",
+    storageBucket: "biobac-cont.appspot.com",
+    messagingSenderId: "59421729279",
+    appId: "1:59421729279:web:142fbafcc1f22c9b5ac7ca"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  let currentLang = localStorage.getItem("language") || "ro";
+
+  const translations = {
+    ro: {
+      authTitle: "🔬 Autentificare BioBAC",
+      loginBtn: "➡️ Log In",
+      signupBtn: "✨ Creează cont",
+      accountTitle: "👩‍🔬 Contul Meu",
+      saveBtn: "💾 Salvează numele",
+      saveEmailBtn: "📧 Salvează email",
+      changePassBtn: "🔁 Schimbă parola",
+      logoutBtn: "🚪 Deconectare",
+      langBtn: "🌐 Schimbă limbă",
+      labelName: "Schimbă numele",
+      labelEmail: "Schimbă email-ul",
+      labelPassword: "Schimbă parola",
+      labelShowName: "Nume:",
+      labelShowEmail: "Email:",
+      darkModeBtn: "Mod Întunecat",
+      deleteAccountBtn: "Șterge contul",
+      placeholderRegisterName: "Nume complet",
+      placeholderEmail: "Email",
+      placeholderPassword: "Parolă",
+      placeholderEditName: "Nume nou",
+      placeholderEditEmail: "Email nou",
+      placeholderNewPassword: "Parolă nouă",
+      alerts: {
+        fillAllFields: "⚠️ Completează toate câmpurile!",
+        fillEmailPassword: "⚠️ Completează email și parola!",
+        invalidName: "⚠️ Eroare: nume invalid.",
+        invalidEmail: "⚠️ Eroare: email invalid.",
+        invalidPassword: "⚠️ Parolă invalidă.",
+        accountCreated: "✅ Cont creat cu succes!",
+        loginSuccess: "✅ Autentificare reușită!",
+        nameUpdated: "✅ Numele a fost actualizat!",
+        emailUpdated: "✅ Email-ul a fost actualizat!",
+        passwordChanged: "🔐 Parola a fost schimbată!",
+        confirmDelete: "Ești sigur că vrei să-ți ștergi contul?",
+        accountDeleted: "✅ Contul a fost șters."
+      }
+    },
+    en: {
+      authTitle: "🔬 BioBAC Login",
+      loginBtn: "➡️ Log In",
+      signupBtn: "✨ Sign Up",
+      accountTitle: "👩‍🔬 My Account",
+      saveBtn: "💾 Save Name",
+      saveEmailBtn: "📧 Save Email",
+      changePassBtn: "🔁 Change Password",
+      logoutBtn: "🚪 Log Out",
+      langBtn: "🌐 Change Language",
+      labelName: "Change Name",
+      labelEmail: "Change Email",
+      labelPassword: "Change Password",
+      labelShowName: "Name:",
+      labelShowEmail: "Email:",
+      darkModeBtn: "Dark Mode",
+      deleteAccountBtn: "Delete Account",
+      placeholderRegisterName: "Full Name",
+      placeholderEmail: "Email",
+      placeholderPassword: "Password",
+      placeholderEditName: "New Name",
+      placeholderEditEmail: "New Email",
+      placeholderNewPassword: "New Password",
+      alerts: {
+        fillAllFields: "⚠️ Please fill in all fields!",
+        fillEmailPassword: "⚠️ Please fill in email and password!",
+        invalidName: "⚠️ Error: invalid name.",
+        invalidEmail: "⚠️ Error: invalid email.",
+        invalidPassword: "⚠️ Invalid password.",
+        accountCreated: "✅ Account created successfully!",
+        loginSuccess: "✅ Login successful!",
+        nameUpdated: "✅ Name has been updated!",
+        emailUpdated: "✅ Email has been updated!",
+        passwordChanged: "🔐 Password has been changed!",
+        confirmDelete: "Are you sure you want to delete your account?",
+        accountDeleted: "✅ Account has been deleted."
+      }
+    }
+  };
+
+  const authDiv = document.getElementById("auth");
+  const accountDiv = document.getElementById("account");
+  const showName = document.getElementById("show-name");
+  const showEmail = document.getElementById("show-email");
+  const registerNameInput = document.getElementById("register-name");
+  const emailInput = document.getElementById("email");
+  const passwordInput = document.getElementById("password");
+  const editNameInput = document.getElementById("edit-name");
+  const editEmailInput = document.getElementById("edit-email");
+  const newPassInput = document.getElementById("new-password");
+
+  function translateUI() {
+    const t = translations[currentLang];
+    document.getElementById("auth-title").textContent = t.authTitle;
+    document.getElementById("login-btn").textContent = t.loginBtn;
+    document.getElementById("signup-btn").textContent = t.signupBtn;
+    document.getElementById("account-title").textContent = t.accountTitle;
+    document.getElementById("save-btn").textContent = t.saveBtn;
+    document.getElementById("save-email-btn").textContent = t.saveEmailBtn;
+    document.getElementById("change-pass-btn").textContent = t.changePassBtn;
+    document.getElementById("logout-btn").textContent = t.logoutBtn;
+    document.getElementById("lang-btn").textContent = t.langBtn;
+    document.getElementById("lang-btn-account").textContent = t.langBtn;
+    document.getElementById("label-show-name").textContent = "👤 " + t.labelShowName;
+    document.getElementById("label-show-email").textContent = "✉️ " + t.labelShowEmail;
+    document.getElementById("dark-mode-btn").textContent = "🌓 " + t.darkModeBtn;
+    document.getElementById("delete-account-btn").textContent = "🗑️ " + t.deleteAccountBtn;
+
+    document.querySelector("label[for='edit-name']").textContent = t.labelName;
+    document.querySelector("label[for='edit-email']").textContent = t.labelEmail;
+    document.querySelector("label[for='new-password']").textContent = t.labelPassword;
+
+    registerNameInput.placeholder = t.placeholderRegisterName;
+    emailInput.placeholder = t.placeholderEmail;
+    passwordInput.placeholder = t.placeholderPassword;
+    editNameInput.placeholder = t.placeholderEditName;
+    editEmailInput.placeholder = t.placeholderEditEmail;
+    newPassInput.placeholder = t.placeholderNewPassword;
+  }
+
+  translateUI();
+
+  function toggleLanguage() {
+    currentLang = currentLang === "ro" ? "en" : "ro";
+    localStorage.setItem("language", currentLang);
+    translateUI();
+  }
+
+  function signup() {
+    const email = emailInput.value.trim();
+    const password = passwordInput.value.trim();
+    const name = registerNameInput.value.trim();
+    const a = translations[currentLang].alerts;
+    if (!email || !password || !name) return alert(a.fillAllFields);
+
+    auth.createUserWithEmailAndPassword(email, password)
+      .then(cred => {
+        const uid = cred.user.uid;
+        return db.collection('users').doc(uid).set({ name, email });
+      })
+      .then(() => alert(translations[currentLang].alerts.accountCreated))
+      .catch(err => alert("❌ " + err.message));
+  }
+
+  function login() {
+    const email = emailInput.value.trim();
+    const password = passwordInput.value.trim();
+    const a = translations[currentLang].alerts;
+    if (!email || !password) return alert(a.fillEmailPassword);
+
+    auth.signInWithEmailAndPassword(email, password)
+      .then(() => alert(a.loginSuccess))
+      .catch(err => alert("❌ " + err.message));
+  }
+
+  function logout() {
+    auth.signOut();
+  }
+
+  function updateName() {
+    const a = translations[currentLang].alerts;
+    const newName = editNameInput.value.trim();
+    if (!newName) return alert(a.invalidName);
+
+    const user = auth.currentUser;
+    if (!user) return;
+
+    db.collection('users').doc(user.uid).update({ name: newName })
+      .then(() => {
+        showName.textContent = newName;
+        editNameInput.value = "";
+        alert(a.nameUpdated);
+      })
+      .catch(err => alert("❌ " + err.message));
+  }
+
+  function updateEmail() {
+    const a = translations[currentLang].alerts;
+    const newEmail = editEmailInput.value.trim();
+    if (!newEmail) return alert(a.invalidEmail);
+
+    const user = auth.currentUser;
+    if (!user) return;
+
+    user.updateEmail(newEmail)
+      .then(() => db.collection('users').doc(user.uid).update({ email: newEmail }))
+      .then(() => {
+        showEmail.textContent = newEmail;
+        editEmailInput.value = "";
+        alert(a.emailUpdated);
+      })
+      .catch(err => alert("❌ " + err.message));
+  }
+
+  function changePassword() {
+    const a = translations[currentLang].alerts;
+    const newPass = newPassInput.value.trim();
+    if (!newPass || newPass.length < 6) return alert(a.invalidPassword);
+
+    const user = auth.currentUser;
+    if (!user) return;
+
+    user.updatePassword(newPass)
+      .then(() => {
+        newPassInput.value = "";
+        alert(a.passwordChanged);
+      })
+      .catch(err => alert("❌ " + err.message));
+  }
+
+  function deleteAccount() {
+    const a = translations[currentLang].alerts;
+    if (!confirm(a.confirmDelete)) return;
+
+    const user = auth.currentUser;
+    if (!user) return;
+
+    db.collection('users').doc(user.uid).delete()
+      .then(() => user.delete())
+      .then(() => alert(a.accountDeleted))
+      .catch(err => alert("❌ " + err.message));
+  }
+
+  function goHome() {
+    window.location.href = "index.html";
+  }
+
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      authDiv.classList.add('hidden');
+      accountDiv.classList.remove('hidden');
+      db.collection('users').doc(user.uid).get()
+        .then(doc => {
+          if (!doc.exists) throw new Error("User data not found");
+          const data = doc.data();
+          showName.textContent = data.name;
+          showEmail.textContent = data.email;
+        })
+        .catch(err => alert("❌ " + err.message));
+    } else {
+      authDiv.classList.remove('hidden');
+      accountDiv.classList.add('hidden');
+      registerNameInput.value = "";
+      emailInput.value = "";
+      passwordInput.value = "";
+      editNameInput.value = "";
+      editEmailInput.value = "";
+      newPassInput.value = "";
+    }
+  });
+
+  function toggleDarkMode() {
+    document.body.classList.toggle('dark');
+    localStorage.setItem('tema', document.body.classList.contains('dark') ? 'dark' : 'light');
+  }
+
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement({
+      pageLanguage: 'ro',
+      includedLanguages: 'en,hu',
+      layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+      autoDisplay: false
+    }, 'google_translate_element');
+  }
+
+  // Service Worker Registration
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js')
+        .then(registration => {
+          console.log('SW registered: ', registration);
+        })
+        .catch(registrationError => {
+          console.log('SW registration failed: ', registrationError);
+        });
+    });
+  }
+</script>
+</body>
+</html>
