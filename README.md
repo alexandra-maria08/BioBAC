@@ -18,10 +18,6 @@ BioBAC este un site educațional dedicat elevilor de liceu, care oferă material
 - Firebase Firestore pentru stocarea progresului
 - Netlify pentru hosting
 
-## Link către site-ul BioBAC
-
-[Accesează BioBAC pe Netlify](https://biobac.netlify.app/)
-
 ## Cum să contribui
 
 Dacă dorești să contribui la proiect, poți face un fork al acestui repository și să trimiți pull request-uri cu îmbunătățiri sau corecții.
