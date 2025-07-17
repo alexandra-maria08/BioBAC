@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BioBAC – Meniu principal</title>
+  <link rel="manifest" href="manifest.json" />
+
+<script>
+  if (localStorage.getItem('tema') === 'dark') {
+    document.addEventListener('DOMContentLoaded', () => {
+      document.body.classList.add('dark');
+    });
+  }
+</script>
+
+  <script>
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'ro',
+        includedLanguages: 'ro,en,hu',
+        layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL
+      }, 'google_translate_element');
+    }
+  </script>
+  <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #a8e6cf 0%, #7fcdcd 100%);
+      color: #333;
+      transition: all 0.3s ease;
+      min-height: 100vh;
+      padding: 20px 20px 20px 70px;
+      position: relative;
+    }
+    
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #a8e6cf 0%, #7fcdcd 100%);
+      opacity: 0.1;
+      z-index: -1;
+    }
+    
+    body.expanded {
+      padding-left: 240px;
+    }
+    
+    main {
+      text-align: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    h1 {
+      color: #2c3e50;
+      font-size: 3rem;
+      font-weight: 700;
+      margin-top: 80px;
+      margin-bottom: 30px;
+      text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+      background: linear-gradient(135deg, #2c3e50, #34495e);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.2));
+    }
+    
+    h2 {
+      color: #2c3e50;
+      font-size: 2rem;
+      margin: 50px 0 25px 0;
+      font-weight: 600;
+      position: relative;
+      display: inline-block;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    h2::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(135deg, #2c3e50, #34495e);
+      border-radius: 2px;
+    }
+    
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+      margin: 30px 0;
+      padding: 0 20px;
+    }
+    
+    .card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 30px 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255,255,255,0.2);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(135deg, #a8e6cf, #7fcdcd);
+    }
+    
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+    
+    .card .emoji {
+      font-size: 3rem;
+      margin-bottom: 15px;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+    }
+    
+    .card div:nth-child(2) {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #2c3e50;
+      margin-bottom: 15px;
+    }
+    
+    .card a {
+      display: inline-block;
+      color: #2c3e50;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 10px 20px;
+      border-radius: 25px;
+      background: rgba(168, 230, 207, 0.3);
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+    }
+    
+    .card a:hover {
+      background: linear-gradient(135deg, #a8e6cf, #7fcdcd);
+      color: #2c3e50;
+      transform: scale(1.05);
+    }
+
+    #google_translate_element {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      z-index: 1100;
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: blur(10px);
+      border-radius: 10px;
+      padding: 5px 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .goog-te-gadget {
+      font-size: 0;
+    }
+    
+    .goog-te-combo {
+      font-size: 14px !important;
+      padding: 5px 8px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      background: white;
+    }
+
+    #sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: 70px;
+      background: linear-gradient(180deg, #2c3e50 0%, #34495e 100%);
+      box-shadow: 5px 0 20px rgba(0,0,0,0.1);
+      padding-top: 70px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 1200;
+      transition: all 0.3s ease;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+    
+    #sidebar.expanded {
+      width: 240px;
+      align-items: flex-start;
+      padding-left: 15px;
+    }
+    
+    #sidebar::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    #sidebar::-webkit-scrollbar-track {
+      background: rgba(255,255,255,0.1);
+      border-radius: 4px;
+    }
+    
+    #sidebar::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.3);
+      border-radius: 4px;
+    }
+    
+    #sidebar::-webkit-scrollbar-thumb:hover {
+      background: rgba(255,255,255,0.5);
+    }
+
+    #sidebar-toggle {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      width: 30px;
+      height: 25px;
+      cursor: pointer;
+      z-index: 1300;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: transparent;
+      border: none;
+      padding: 0;
+    }
+    
+    .bar {
+      width: 30px;
+      height: 4px;
+      background: #2c3e50;
+      border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+    
+    #sidebar.expanded ~ #sidebar-toggle .bar:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+      background: white;
+    }
+    
+    #sidebar.expanded ~ #sidebar-toggle .bar:nth-child(2) {
+      opacity: 0;
+    }
+    
+    #sidebar.expanded ~ #sidebar-toggle .bar:nth-child(3) {
+      transform: rotate(-45deg) translate(6px, -6px);
+      background: white;
+    }
+
+    #sidebar a {
+      width: 200px;
+      margin: 8px 0;
+      padding: 15px 20px;
+      color: white;
+      font-weight: 600;
+      font-size: 1rem;
+      text-decoration: none;
+      border-radius: 15px;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    #sidebar.collapsed a,
+    #sidebar:not(.expanded) a {
+      width: 50px;
+      height: 50px;
+      padding: 0;
+      justify-content: center;
+      font-size: 1.5rem;
+      background: transparent;
+      border: none;
+    }
+    
+    #sidebar.collapsed a span.text,
+    #sidebar:not(.expanded) a span.text {
+      display: none;
+    }
+    
+    #sidebar a:hover {
+      background: rgba(255,255,255,0.2);
+      transform: translateX(5px);
+    }
+    
+    #sidebar a span.emoji {
+      font-size: 1.3rem;
+      margin-right: 12px;
+      flex-shrink: 0;
+    }
+    
+    #sidebar.collapsed a span.emoji,
+    #sidebar:not(.expanded) a span.emoji {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
+    #sidebar a.expandable::after {
+      content: "▼";
+      margin-left: auto;
+      transition: transform 0.3s ease;
+      font-size: 0.8rem;
+    }
+    
+    #sidebar a.expandable.expanded::after {
+      transform: rotate(-180deg);
+    }
+    
+    #sidebar.collapsed a.expandable::after,
+    #sidebar:not(.expanded) a.expandable::after {
+      display: none;
+    }
+
+    #sidebar .submenu {
+      display: none;
+      flex-direction: column;
+      width: 100%;
+      margin-top: 5px;
+    }
+    
+    #sidebar .submenu a {
+      font-size: 0.9rem;
+      padding: 10px 15px;
+      background: rgba(255,255,255,0.05);
+      margin: 2px 0;
+      border-radius: 10px;
+      margin-left: 20px;
+      width: 180px;
+    }
+
+    #sidebar.collapsed a::after,
+    #sidebar:not(.expanded) a::after {
+      content: attr(title);
+      position: absolute;
+      left: 75px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #2c3e50;
+      padding: 8px 12px;
+      border-radius: 8px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+      color: white;
+      font-size: 0.9rem;
+      z-index: 1500;
+    }
+    
+    #sidebar.collapsed a:hover::after,
+    #sidebar:not(.expanded) a:hover::after {
+      opacity: 1;
+    }
+
+    body.dark {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      color: #e0e0e0;
+    }
+    
+    body.dark h1 {
+      color: #90caf9;
+      background: linear-gradient(135deg, #90caf9, #64b5f6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    body.dark h2 {
+      color: #90caf9;
+    }
+    
+    body.dark h2::after {
+      background: linear-gradient(135deg, #90caf9, #64b5f6);
+    }
+    
+    body.dark .card {
+      background: rgba(30, 30, 30, 0.9);
+      border: 1px solid rgba(144, 202, 249, 0.2);
+    }
+    
+    body.dark .card::before {
+      background: linear-gradient(135deg, #90caf9, #64b5f6);
+    }
+    
+    body.dark .card div:nth-child(2) {
+      color: #e0e0e0;
+    }
+    
+    body.dark .card a {
+      color: #90caf9;
+      background: rgba(144, 202, 249, 0.1);
+    }
+    
+    body.dark .card a:hover {
+      background: linear-gradient(135deg, #90caf9, #64b5f6);
+      color: #1a1a2e;
+    }
+    
+    body.dark #sidebar {
+      background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding-left: 70px !important;
+      }
+      
+      #sidebar {
+        width: 70px !important;
+      }
+      
+      #sidebar.expanded {
+        width: 240px !important;
+      }
+      
+      .grid {
+        grid-template-columns: 1fr;
+        padding: 0 10px;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      h2 {
+        font-size: 1.5rem;
+      }
+    }
+
+    p {
+      font-size: 1.1rem;
+      color: #2c3e50;
+      margin: 20px 0;
+      font-weight: 500;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+    
+    body.dark p {
+      color: #bbb;
+    }
+  </style>
+</head>
+<body>
+  <div id="google_translate_element"></div>
+
+  <nav id="sidebar" aria-label="Meniu lateral">
+    <button id="sidebar-toggle" aria-label="Deschide meniul" aria-expanded="false" aria-controls="sidebar" type="button">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
+
+    <a class='nav-btn' href='/cont' id='btn-cont' title='Contul Meu'>
+      <span class="emoji">👤</span><span class="text">Cont</span>
+    </a>
+    <a href="https://discord.gg/cW2eetKK3S" title="Discord BioBAC" target="_blank" rel="noopener noreferrer" id="btn-discord" class="nav-btn">
+      <span class="emoji">🌀</span><span class="text">Discord</span>
+    </a>
+    <a class='nav-btn' href='/gamificare' id='btn-progres' title='Progres'>
+      <span class="emoji">🏆</span><span class="text">Progres</span>
+    </a>
+
+    <a href="#" class="expandable nav-btn" id="btn-lectii" aria-expanded="false" aria-controls="submenu-lectii" title="Lecții">
+      <span class="emoji">📚</span><span class="text">Lecții</span>
+    </a>
+    <div id="submenu-lectii" class="submenu" role="region" aria-label="Submeniul Lecții">
+      <a href='/biologie/celula' title='Celula'><span class="emoji">🔬</span><span class="text">Celula</span></a>
+      <a href='/biologie/tesuturi' title='Țesuturi'><span class="emoji">🧫</span><span class="text">Țesuturi</span></a>
+      <a href='/biologie/fotosinteza' title='Fotosinteza'><span class="emoji">🌿</span><span class="text">Fotosinteza</span></a>
+      <a href='/biologie/organe' title='Organe și funcții'><span class="emoji">🌱</span><span class="text">Organe și funcții</span></a>
+      <a href='/biologie/reproducerea' title='Reproducerea'><span class="emoji">🧬</span><span class="text">Reproducerea</span></a>
+      <a href='/organizare' title='Organizarea corpului uman'><span class="emoji">🧬</span><span class="text">Organizarea corpului uman</span></a>
+      <a href='/nervos' title='Sistemul nervos'><span class="emoji">🧠</span><span class="text">Sistemul nervos</span></a>
+      <a href='/locomotor' title='Sistemul locomotor'><span class="emoji">💪</span><span class="text">Sistemul locomotor</span></a>
+      <a href='/digestiv' title='Sistemul digestiv'><span class="emoji">🍽️</span><span class="text">Sistemul digestiv</span></a>
+      <a href='/respirator' title='Sistemul respirator'><span class="emoji">🌬️</span><span class="text">Sistemul respirator</span></a>
+      <a href='/circulator' title='Sistemul circulator'><span class="emoji">❤️</span><span class="text">Sistemul circulator</span></a>
+      <a href='/excretor' title='Sistemul excretor'><span class="emoji">💧</span><span class="text">Sistemul excretor</span></a>
+      <a href='/reproducator' title='Sistemul reproducător'><span class="emoji">❤️‍🔥</span><span class="text">Sistemul reproducător</span></a>
+      <a href='/endocrine' title='Glandele endocrine'><span class="emoji">🧪</span><span class="text">Glandele endocrine</span></a>
+      <a href='/analizatori' title='Analizatorii'><span class="emoji">👁️</span><span class="text">Analizatorii</span></a>
+    </div>
+
+    <a href="#" class="expandable nav-btn" id="btn-ar" aria-expanded="false" aria-controls="submenu-ar" title="Modele 3D AR">
+      <span class="emoji">🔬</span><span class="text">Modele 3D AR</span>
+    </a>
+    <div id="submenu-ar" class="submenu" role="region" aria-label="Submeniul Modele 3D AR">
+      <a href='/inima-ar' title='Inima AR'><span class="emoji">🫀</span><span class="text">Inima AR</span></a>
+      <a href='/neuron-ar' title='Neuron AR'><span class="emoji">🧠</span><span class="text">Neuron AR</span></a>
+      <a href='/ochi-ar' title='Ochi AR'><span class="emoji">👁️</span><span class="text">Ochi AR</span></a>
+    </div>
+
+    <a href="#" class="expandable nav-btn" id="btn-teste" aria-expanded="false" aria-controls="submenu-teste" title="Teste recapitulative">
+      <span class="emoji">📊</span><span class="text">Teste</span>
+    </a>
+    <div id="submenu-teste" class="submenu" role="region" aria-label="Submeniul Teste recapitulative">
+      <a href='/test_biologie' title='Test – Biologie'><span class="emoji">🧬</span><span class="text">Test – Biologie</span></a>
+      <a href='/test_anatomie' title='Test – Anatomie'><span class="emoji">🧠</span><span class="text">Test – Anatomie</span></a>
+    </div>
+  </nav>
+
+  <main>
+    <h1>📘 BioBAC – Meniu principal</h1>
+
+    <div class="grid">
+      <div class="card">
+        <div class="emoji">📘</div>
+        <div>Despre BioBAC</div>
+        <a href='/despre'>→ Află mai multe</a>
+      </div>
+    </div>
+
+    <p>Alege o lecție pentru a începe învățarea:</p>
+
+    <h2>🌿 Biologie vegetală și animală</h2>
+    <div class="grid">
+      <div class="card"><div class="emoji">🔬</div><div>Celula</div><a href='/biologie/celula'>→ Intră în lecție</a></div>
+      <div class="card"><div class="emoji">🧫</div><div>Țesuturi</div><a href='/biologie/tesuturi'>→ Intră în lecție</a></div>
+      <div class="card"><div class="emoji">🌿</div><div>Fotosinteza</div><a href='/biologie/fotosinteza'>→ Intră în lecție</a></div>
+      <div class="card"><div class="emoji">🌱</div><div>Organe și funcții</div><a href='/biologie/organe'>→ Intră în lecție</a></div>
+      <div class="card"><div class="emoji">🧬</div><div>Reproducerea</div><a href='/biologie/reproducerea'>→ Intră în lecție</a></div>
+      <div class="card"><div class="emoji">🧬</div><div>Organizarea corpului uman</div><a href='/organizare'>→ Intră în lecție</a></div>
+    </div>
+
+    <h2>🧠 Anatomie umană</h2>
+    <div class="grid">
+      <div class="card"><div class="emoji">🧠</div><div>Sistemul nervos</div><a href='/nervos'>→ Intră în lecție</a></div>
+      <div class="card"><div class="emoji">💪</div><div>Sistemul locomotor</div><a href='/locomotor'>→ Intră în lecție</a></div>
+      <div class="card"><div class="emoji">🍽️</div><div>Sistemul digestiv</div><a href='/digestiv'>→ Intră în lecție</a></div>
+      <div class="card"><div class="emoji">🌬️</div><div>Sistemul respirator</div><a href='/respirator'>→ Intră în lecție</a></div>
+      <div class="card"><div class="emoji">❤️</div><div>Sistemul circulator</div><a href='/circulator'>→ Intră în lecție</a></div>
+      <div class="card"><div class="emoji">💧</div><div>Sistemul excretor</div><a href='/excretor'>→ Intră în lecție</a></div>
+      <div class="card"><div class="emoji">❤️‍🔥</div><div>Sistemul reproducător</div><a href='/reproducator'>→ Intră în lecție</a></div>
+      <div class="card"><div class="emoji">🧪</div><div>Glandele endocrine</div><a href='/endocrine'>→ Intră în lecție</a></div>
+      <div class="card"><div class="emoji">👁️</div><div>Analizatorii</div><a href='/analizatori'>→ Intră în lecție</a></div>
+    </div>
+
+    <h2>🔬 Modele 3D AR interactive</h2>
+    <div class="grid">
+      <div class="card"><div class="emoji">🫀</div><div>Inima AR</div><a href='/inima-ar'>→ Vizualizează în AR</a></div>
+      <div class="card"><div class="emoji">🧠</div><div>Neuron AR</div><a href='/neuron-ar'>→ Vizualizează în AR</a></div>
+      <div class="card"><div class="emoji">👁️</div><div>Ochi AR</div><a href='/ochi-ar'>→ Vizualizează în AR</a></div>
+    </div>
+
+    <h2>📊 Teste recapitulative</h2>
+    <div class="grid">
+      <div class="card"><div class="emoji">🧬</div><div>Test – Biologie</div><a href='/test_biologie'>→ Începe testul</a></div>
+      <div class="card"><div class="emoji">🧠</div><div>Test – Anatomie</div><a href='/test_anatomie'>→ Începe testul</a></div>
+    </div>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('tema') === 'dark') {
+        document.body.classList.add('dark');
+      }
+    });
+  </script>
+
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("sw.js")
+        .then(reg => console.log("✅ Service Worker activat!", reg))
+        .catch(err => console.error("❌ Eroare la SW:", err));
+    }
+  </script>
+
+  <script>
+    const sidebar = document.getElementById('sidebar');
+    const toggleBtn = document.getElementById('sidebar-toggle');
+    const lectiiBtn = document.getElementById('btn-lectii');
+    const submenuLectii = document.getElementById('submenu-lectii');
+    const arBtn = document.getElementById('btn-ar');
+    const submenuAr = document.getElementById('submenu-ar');
+    const testeBtn = document.getElementById('btn-teste');
+    const submenuTeste = document.getElementById('submenu-teste');
+
+    function updateAria() {
+      toggleBtn.setAttribute('aria-expanded', sidebar.classList.contains('expanded'));
+      lectiiBtn.setAttribute('aria-expanded', lectiiBtn.classList.contains('expanded'));
+      arBtn.setAttribute('aria-expanded', arBtn.classList.contains('expanded'));
+      testeBtn.setAttribute('aria-expanded', testeBtn.classList.contains('expanded'));
+    }
+
+    toggleBtn.addEventListener('click', () => {
+      sidebar.classList.toggle('expanded');
+      if (sidebar.classList.contains('expanded')) {
+        document.body.classList.add('expanded');
+      } else {
+        document.body.classList.remove('expanded');
+        lectiiBtn.classList.remove('expanded');
+        submenuLectii.style.display = 'none';
+        arBtn.classList.remove('expanded');
+        submenuAr.style.display = 'none';
+        testeBtn.classList.remove('expanded');
+        submenuTeste.style.display = 'none';
+      }
+      updateAria();
+    });
+
+    lectiiBtn.addEventListener('click', e => {
+      e.preventDefault();
+      lectiiBtn.classList.toggle('expanded');
+      if(lectiiBtn.classList.contains('expanded')){
+        submenuLectii.style.display = 'flex';
+      } else {
+        submenuLectii.style.display = 'none';
+      }
+      updateAria();
+    });
+
+    arBtn.addEventListener('click', e => {
+      e.preventDefault();
+      arBtn.classList.toggle('expanded');
+      if(arBtn.classList.contains('expanded')){
+        submenuAr.style.display = 'flex';
+      } else {
+        submenuAr.style.display = 'none';
+      }
+      updateAria();
+    });
+
+    testeBtn.addEventListener('click', e => {
+      e.preventDefault();
+      testeBtn.classList.toggle('expanded');
+      if(testeBtn.classList.contains('expanded')){
+        submenuTeste.style.display = 'flex';
+      } else {
+        submenuTeste.style.display = 'none';
+      }
+      updateAria();
+    });
+
+    submenuLectii.style.display = 'none';
+    submenuAr.style.display = 'none';
+    submenuTeste.style.display = 'none';
+    document.body.classList.remove('expanded');
+    updateAria();
+  </script>
+  <script src="settings.js"></script>
+</body>
+</html>

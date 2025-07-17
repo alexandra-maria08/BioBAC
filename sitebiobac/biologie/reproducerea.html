@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link rel="manifest" href="/manifest.json">
+<title>BioBAC – Lecția: Reproducerea</title>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<!-- Activare dark mode din localStorage -->
+<script>
+    if (localStorage.getItem('tema') === 'dark') {
+      document.documentElement.classList.add('dark');
+    }
+</script>
+
+<style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #fce4ec;
+      padding: 20px;
+      margin: 0;
+      color: #000;
+    }
+    .container {
+      max-width: 800px;
+      background: white;
+      padding: 20px;
+      margin: auto;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      position: relative;
+    }
+    h1, h2 { color: #880e4f; }
+    ul { text-align: left; }
+    .intrebare { margin: 15px 0; text-align: left; }
+    .raspunsuri button {
+      display: block;
+      margin: 5px 0;
+      padding: 8px;
+      width: 100%;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      background-color: #f0f0f0;
+      color: #000;
+    }
+    .raspunsuri button.corect {
+      background-color: #c8e6c9;
+      color: #2e7d32;
+      border: none;
+    }
+    .raspunsuri button.gresit {
+      background-color: #ffcdd2;
+      color: #c62828;
+      border: none;
+    }
+    .feedback { font-weight: bold; margin-top: 10px; }
+    input[type=text], select {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0;
+    }
+    a.back {
+      display: inline-block;
+      margin-top: 20px;
+      color: #880e4f;
+      font-weight: bold;
+      text-decoration: none;
+    }
+    .rezultat {
+      background-color: #fff9c4;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 20px;
+      font-size: 18px;
+    }
+
+    /* Google Translate container */
+    #google_translate_element {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      z-index: 10;
+      text-align: right;
+    }
+
+    /* DARK MODE */
+    .dark body, .dark {
+      background-color: #121212 !important;
+      color: #e0e0e0 !important;
+    }
+    .dark .container {
+      background-color: #1e1e1e !important;
+      box-shadow: 0 0 10px rgba(255,255,255,0.1) !important;
+    }
+    .dark .raspunsuri button {
+      background-color: #2c2c2c !important;
+      color: white !important;
+    }
+    .dark .raspunsuri button.corect {
+      background-color: #388e3c !important;
+      color: white !important;
+      border: none !important;
+    }
+    .dark .raspunsuri button.gresit {
+      background-color: #d32f2f !important;
+      color: white !important;
+      border: none !important;
+    }
+    .dark .rezultat { background-color: #333 !important; }
+    .dark a.back { color: #f06292 !important; }
+
+    /* Google Translate styling */
+    .goog-te-banner-frame.skiptranslate {
+      display: none !important;
+    }
+    body { top: 0 !important; }
+
+    #google_translate_element {
+      margin-top: 5px;
+    }
+
+    #tts-button {
+      background-color: #880e4f;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 16px;
+      cursor: pointer;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+    .dark #tts-button {
+      background-color: #f06292;
+      color: #121212;
+    }
+
+    .info-box {
+      background-color: #e1f5fe;
+      border-left: 4px solid #0288d1;
+      padding: 15px;
+      margin: 15px 0;
+      border-radius: 5px;
+    }
+    .dark .info-box {
+      background-color: #1a237e;
+      border-left-color: #3f51b5;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Google Translate -->
+  <div id="google_translate_element"></div>
+
+  <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+    <button id="tts-button" title="Ascultă teoria esențială">🔊 Ascultă</button>
+    <div id="google_translate_element"></div>
+  </div>
+
+  <h1>🧬 BioBAC – Lecția: Reproducerea</h1>
+
+  <h2>🧠 Teorie esențială</h2>
+  <div id="teorie-esentiala">
+    <ul>
+      <li><strong>Reproducerea</strong> este funcția fundamentală care asigură perpetuarea speciei și transmiterea caracteristicilor ereditare de la părinți la descendenți.</li>
+      
+      <li><strong>Tipuri de reproducere:</strong>
+        <ul>
+          <li><strong>Reproducere asexuată</strong>: un singur părinte, descendenții sunt identici genetic cu părintele</li>
+          <li><strong>Reproducere sexuată</strong>: doi părinți, descendenții au caracteristici combinate</li>
+        </ul>
+      </li>
+
+      <li><strong>Reproducerea la plante:</strong>
+        <ul>
+          <li><strong>Reproducere asexuată</strong>: prin fragmente vegetative (bulbi, tuberculi, rizomi, stoloni, butași)</li>
+          <li><strong>Reproducere sexuată</strong>: prin flori → polenizare → fecundație → fruct + semințe</li>
+          <li><strong>Polenizarea</strong>: transportul polenului de la stamine la pistil (prin vânt, insecte, apă)</li>
+          <li><strong>Fecundația</strong>: fuziunea gametului masculin cu cel feminin în ovar</li>
+        </ul>
+      </li>
+
+      <li><strong>Reproducerea la animale și om:</strong>
+        <ul>
+          <li>Reproducere sexuată: implică celule sexuale (gameti) → fecundație → zigot → embrion</li>
+          <li><strong>Gameti masculini</strong>: spermatozoizi (produși în testicule)</li>
+          <li><strong>Gameti feminini</strong>: ovule (produși în ovare)</li>
+          <li><strong>Fecundația</strong>: fuziunea spermatozoidului cu ovulul</li>
+          <li><strong>Zigotul</strong>: prima celulă a noului organism, conține informația genetică completă</li>
+        </ul>
+      </li>
+
+      <li><strong>Dezvoltarea embrionară:</strong>
+        <ul>
+          <li>Zigot → diviziuni celulare → morulă → blastulă → gastrulă → embrion</li>
+          <li>Diferențierea celulelor și formarea organelor</li>
+        </ul>
+      </li>
+    </ul>
+
+  </div>
+
+  <h2>📝 Test – 9 itemi</h2>
+
+  <div class="intrebare">
+    <p><strong>1. Prin ce organ are loc fecundația la plante?</strong></p>
+    <div class="raspunsuri">
+      <button onclick="verifica(this, false)">Frunză</button>
+      <button onclick="verifica(this, true)">Floare</button>
+      <button onclick="verifica(this, false)">Rădăcină</button>
+      <button onclick="verifica(this, false)">Tulpină</button>
+    </div>
+  </div>
+
+  <div class="intrebare">
+    <p><strong>2. Celulele sexuale masculine se numesc:</strong></p>
+    <div class="raspunsuri">
+      <button onclick="verifica(this, true)">Spermatozoizi</button>
+      <button onclick="verifica(this, false)">Ovule</button>
+      <button onclick="verifica(this, false)">Gamete</button>
+      <button onclick="verifica(this, false)">Zigoți</button>
+    </div>
+  </div>
+
+  <div class="intrebare">
+    <p><strong>3. Completează: Fecundația este fuziunea dintre __________ și ovul.</strong></p>
+    <input id="c1" type="text"/>
+    <button onclick="verificaCompletare('c1', 'spermatozoid')">Verifică</button>
+    <p class="feedback" id="f1"></p>
+  </div>
+
+  <div class="intrebare">
+    <p><strong>4. Alege metodele de reproducere asexuată:</strong></p>
+    <label><input id="cb1" type="checkbox"> Butași</label><br/>
+    <label><input id="cb2" type="checkbox"/> Polenizare</label><br/>
+    <label><input id="cb3" type="checkbox"/> Rizomi</label><br/>
+    <label><input id="cb4" type="checkbox"/> Fecundație</label><br/>
+    <button onclick="verificaCheckbox()">Verifică</button>
+    <p class="feedback" id="f2"></p>
+  </div>
+
+  <div class="intrebare">
+    <p><strong>5. Completează: Zigotul este prima celulă formată după __________.</strong></p>
+    <input id="c2" type="text"/>
+    <button onclick="verificaCompletare('c2', 'fecundație')">Verifică</button>
+    <p class="feedback" id="f3"></p>
+  </div>
+
+  <div class="intrebare">
+    <p><strong>6. Ce este reproducerea?</strong></p>
+    <input id="r1" type="text"/>
+    <button onclick="verificaScurt('r1')">Verifică</button>
+    <p class="feedback" id="f4"></p>
+  </div>
+
+  <div class="intrebare">
+    <p><strong>7. Asociază fiecare termen cu funcția sa:</strong></p>
+    <label>Ovul → 
+      <select id="a1">
+        <option value="">Selectează</option>
+        <option value="feminin">Celulă sexuală feminină</option>
+        <option value="masculin">Celulă sexuală masculină</option>
+      </select>
+    </label><br/>
+    <label>Spermatozoid → 
+      <select id="a2">
+        <option value="">Selectează</option>
+        <option value="feminin">Celulă sexuală feminină</option>
+        <option value="masculin">Celulă sexuală masculină</option>
+      </select>
+    </label><br/>
+    <button onclick="verificaAsociere()">Verifică</button>
+    <p class="feedback" id="f5"></p>
+  </div>
+
+  <div class="intrebare">
+    <p><strong>8. Completează: Zigotul conține informația __________ a viitorului organism.</strong></p>
+    <input id="z1" type="text"/>
+    <button onclick="verificaCompletare('z1', 'genetică')">Verifică</button>
+    <p class="feedback" id="f_z1"></p>
+  </div>
+
+  <div class="intrebare">
+    <p><strong>9. Asociază fiecare organ cu funcția sa:</strong></p>
+    <label>Testicul →
+      <select id="a_r1">
+        <option value="">Selectează</option>
+        <option value="spermatozoizi">Produce spermatozoizi</option>
+        <option value="ovule">Produce ovule</option>
+      </select>
+    </label><br/>
+    <label>Ovar →
+      <select id="a_r2">
+        <option value="">Selectează</option>
+        <option value="spermatozoizi">Produce spermatozoizi</option>
+        <option value="ovule">Produce ovule</option>
+      </select>
+    </label><br/>
+    <button onclick="verificaAsociereRepro()">Verifică</button>
+    <p class="feedback" id="f_r_asoc"></p>
+  </div>
+
+  <button onclick="afiseazaFeedbackFinal()">✅ Vezi rezultatul final</button>
+  <p class="rezultat" id="rezultatFinal"></p>
+  <a class="back" href="../index.html">← Înapoi la meniu</a>
+</div>
+
+<script>
+let scor = 0;
+let completari = {};
+
+function verifica(elem, corect) {
+  elem.disabled = true;
+  elem.classList.remove('corect', 'gresit');
+  elem.classList.add(corect ? 'corect' : 'gresit');
+  elem.parentElement.querySelectorAll('button').forEach(b => b.disabled = true);
+  if (corect) scor++;
+}
+
+function verificaCompletare(id, rasp) {
+  const val = document.getElementById(id).value.trim().toLowerCase();
+  const f = document.getElementById(id === 'c1' ? 'f1' : id === 'c2' ? 'f3' : 'f_z1');
+  const esteCorect = val === rasp.toLowerCase();
+  f.innerText = esteCorect ? '✔️ Corect' : `❌ Răspuns corect: ${rasp}`;
+  f.style.color = esteCorect ? 'green' : 'red';
+  if (!completari[id] && esteCorect) { scor++; completari[id] = true; }
+}
+
+function verificaCheckbox() {
+  const r = [true, false, true, false]; // Butași și Rizomi sunt asexuate
+  const a = [document.getElementById('cb1').checked, document.getElementById('cb2').checked, document.getElementById('cb3').checked, document.getElementById('cb4').checked];
+  const f = document.getElementById('f2');
+  const e = JSON.stringify(r) === JSON.stringify(a);
+  f.innerText = e ? '✔️ Corect' : '❌ Butașii și rizomii sunt reproducere asexuată.';
+  f.style.color = e ? 'green' : 'red';
+  if (e && !completari['checkbox']) { scor++; completari['checkbox'] = true; }
+}
+
+function verificaScurt(id) {
+  const val = document.getElementById(id).value.trim().toLowerCase();
+  const f = document.getElementById('f4');
+  const chei = ['perpetuare', 'urmaș', 'specie', 'descendenți', 'formare', 'funcție', 'proces'];
+  const esteCorect = chei.some(cuv => val.includes(cuv));
+  f.innerText = esteCorect ? '✔️ Corect' : '❌ Răspuns corect: funcția care asigură perpetuarea speciei.';
+  f.style.color = esteCorect ? 'green' : 'red';
+  if (esteCorect && !completari[id]) { scor++; completari[id] = true; }
+}
+
+function verificaAsociere() {
+  const a1 = document.getElementById('a1').value;
+  const a2 = document.getElementById('a2').value;
+  const f = document.getElementById('f5');
+  const e = a1 === 'feminin' && a2 === 'masculin';
+  f.innerText = e ? '✔️ Corect' : '❌ Ovul → feminină, Spermatozoid → masculină';
+  f.style.color = e ? 'green' : 'red';
+  if (e && !completari['asociere']) { scor++; completari['asociere'] = true; }
+}
+
+function verificaAsociereRepro() {
+  const a1 = document.getElementById('a_r1').value;
+  const a2 = document.getElementById('a_r2').value;
+  const f = document.getElementById('f_r_asoc');
+  const e = a1 === 'spermatozoizi' && a2 === 'ovule';
+  f.innerText = e ? '✔️ Corect' : '❌ Testicul → spermatozoizi, Ovar → ovule';
+  f.style.color = e ? 'green' : 'red';
+  if (e && !completari['asociere_repro']) { scor++; completari['asociere_repro'] = true; }
+}
+
+async function adaugaXP(puncte) {
+  const user = auth.currentUser;
+  if (!user) {
+    console.log("Nu ești logat, nu se poate salva progresul.");
+    return;
+  }
+  const uid = user.uid;
+  const docRef = db.collection("progres_utilizatori").doc(uid);
+  try {
+    const doc = await docRef.get();
+    if (!doc.exists) {
+      await docRef.set({ nivel: 1, xp: 0 });
+    }
+    let data = (await docRef.get()).data();
+    let xp = data.xp || 0;
+    let nivel = data.nivel || 1;
+    const maxXp = nivel * 100;
+
+    xp += puncte;
+
+    if (xp >= maxXp) {
+      nivel++;
+      xp = xp - maxXp;
+      alert(`Felicitări! Ai urcat la nivelul ${nivel}!`);
+    }
+
+    await docRef.update({ nivel, xp });
+    console.log(`Progres salvat: Nivel ${nivel}, XP ${xp}/${nivel*100}`);
+  } catch (e) {
+    console.error("Eroare salvare progres:", e);
+  }
+}
+
+function afiseazaFeedbackFinal() {
+  const procent = (scor / 9) * 100;
+  let mesaj = '';
+  if (procent >= 90) mesaj = '🌟 Excelent! Ai înțeles foarte bine materia!';
+  else if (procent >= 70) mesaj = '👍 Bine! Mai exersează câteva concepte.';
+  else if (procent >= 50) mesaj = '🙂 Mai este loc de îmbunătățire. Recitește lecția.';
+  else mesaj = '⚠️ Îți recomandăm să reiei teoria pas cu pas.';
+  document.getElementById('rezultatFinal').innerText = `${mesaj} Ai obținut ${scor} din 9 răspunsuri corecte.`;
+
+  const xpDeAdaugat = scor * 10; // 10 XP pe răspuns corect
+  adaugaXP(xpDeAdaugat);
+}
+
+// Google Translate init
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'ro',
+    includedLanguages: 'en,hu',
+    layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+  }, 'google_translate_element');
+}
+
+// Service Worker (PWA)
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/sw.js")
+    .then(reg => console.log("✅ Service Worker activat!", reg))
+    .catch(err => console.error("❌ Eroare la SW:", err));
+}
+
+// Firebase config și inițializare
+const firebaseConfig = {
+  apiKey: "AIzaSyA5C-UQTHOO7CFrbzV7vMXfQTrM1iz0_CE",
+  authDomain: "biobac-cont.firebaseapp.com",
+  projectId: "biobac-cont",
+  storageBucket: "biobac-cont.appspot.com",
+  messagingSenderId: "59421729279",
+  appId: "1:59421729279:web:142fbafcc1f22c9b5ac7ca"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+// Text-to-Speech (TTS)
+const ttsButton = document.getElementById('tts-button');
+let synth = window.speechSynthesis;
+let voceCitita = false;
+
+ttsButton.addEventListener('click', () => {
+  if (voceCitita) {
+    synth.cancel();
+    ttsButton.textContent = "🔊 Ascultă";
+    voceCitita = false;
+  } else {
+    let text = document.getElementById('teorie-esentiala').innerText;
+    let utterThis = new SpeechSynthesisUtterance(text);
+    utterThis.lang = 'ro-RO';
+    utterThis.rate = 1;
+    utterThis.pitch = 1;
+    utterThis.onend = () => {
+      ttsButton.textContent = "🔊 Ascultă";
+      voceCitita = false;
+    };
+    synth.speak(utterThis);
+    ttsButton.textContent = "⏸️ Oprește";
+    voceCitita = true;
+  }
+});
+</script>
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<script src="settings.js"></script>
+</body>
+</html>

@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link rel="manifest" href="/manifest.json">
+<title>BioBAC – Lecția: Organe și funcții</title>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<!-- Activare dark mode din localStorage -->
+<script>
+    if (localStorage.getItem('tema') === 'dark') {
+      document.documentElement.classList.add('dark');
+    }
+</script>
+
+<style>
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #e8f5e9;
+    padding: 20px;
+    margin: 0;
+    color: #000;
+  }
+  .container {
+    max-width: 800px;
+    background: white;
+    padding: 20px;
+    margin: auto;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    position: relative;
+  }
+  h1, h2 { color: #1b5e20; }
+  ul { text-align: left; }
+  .intrebare { margin: 15px 0; text-align: left; }
+  .raspunsuri button {
+    display: block;
+    margin: 5px 0;
+    padding: 8px;
+    width: 100%;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    background-color: #f0f0f0;
+    color: #000;
+  }
+  .raspunsuri button.corect {
+    background-color: #c8e6c9;
+    color: #2e7d32;
+    border: none;
+  }
+  .raspunsuri button.gresit {
+    background-color: #ffcdd2;
+    color: #c62828;
+    border: none;
+  }
+  .feedback { font-weight: bold; margin-top: 10px; }
+  input[type=text], select {
+    width: 100%;
+    padding: 8px;
+    margin: 5px 0;
+  }
+  a.back {
+    display: inline-block;
+    margin-top: 20px;
+    color: #1b5e20;
+    font-weight: bold;
+    text-decoration: none;
+  }
+  .rezultat {
+    background-color: #fff9c4;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 20px;
+    font-size: 18px;
+  }
+
+  /* Google Translate container */
+  #google_translate_element {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    z-index: 10;
+    text-align: right;
+  }
+
+  /* DARK MODE */
+  .dark body, .dark {
+    background-color: #121212 !important;
+    color: #e0e0e0 !important;
+  }
+  .dark .container {
+    background-color: #1e1e1e !important;
+    box-shadow: 0 0 10px rgba(255,255,255,0.1) !important;
+  }
+  .dark .raspunsuri button {
+    background-color: #2c2c2c !important;
+    color: white !important;
+  }
+  .dark .raspunsuri button.corect {
+    background-color: #388e3c !important;
+    color: white !important;
+    border: none !important;
+  }
+  .dark .raspunsuri button.gresit {
+    background-color: #d32f2f !important;
+    color: white !important;
+    border: none !important;
+  }
+  .dark .rezultat { background-color: #333 !important; }
+  .dark a.back { color: #81c784 !important; }
+
+  /* Google Translate styling */
+  .goog-te-banner-frame.skiptranslate {
+    display: none !important;
+  }
+  body { top: 0 !important; }
+
+  #google_translate_element {
+  margin-top: 5px;
+}
+
+#tts-button {
+  background-color: #1b5e20;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-weight: bold;
+  margin: 10px 0;
+}
+.dark #tts-button {
+  background-color: #81c784;
+  color: #121212;
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Google Translate -->
+  <div id="google_translate_element"></div>
+
+  <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+  <button id="tts-button" title="Ascultă teoria esențială">🔊 Ascultă</button>
+  <div id="google_translate_element"></div>
+</div>
+
+<h1>🌱 BioBAC – Lecția: Organe și funcții</h1>
+
+  <h2>🧠 Teorie esențială</h2>
+  <div id="teorie-esentiala">
+    <ul>
+      <li>Organele sunt grupări de țesuturi care îndeplinesc funcții vitale pentru organism.</li>
+      <li>La plante identificăm următoarele organe principale:
+        <ul>
+          <li><strong>Rădăcina</strong> - asigură fixarea plantei în sol și absorbția apei și substanțelor nutritive</li>
+          <li><strong>Tulpina</strong> - susține planta și transportă substanțele între rădăcină și frunze</li>
+          <li><strong>Frunza</strong> - organul principal de fotosinteză, transformă lumina solară în energie chimică</li>
+          <li><strong>Floarea</strong> - organul reproducător, conține părți masculine și feminine</li>
+          <li><strong>Fructul și semințele</strong> - asigură dispersia și germinarea noilor plante</li>
+        </ul>
+      </li>
+      <li>La animale organele se grupează în sisteme/aparate specializate:
+        <ul>
+          <li><strong>Sistemul digestiv</strong> - procesează alimentele și extrage nutrienții (stomac, intestin, ficat)</li>
+          <li><strong>Sistemul respirator</strong> - asigură schimbul de gaze oxigen și dioxid de carbon (plămâni, trahee)</li>
+          <li><strong>Sistemul circulator</strong> - transportă substanțele prin corp (inima, vasele de sânge)</li>
+          <li><strong>Sistemul excretor</strong> - elimină deșeurile din organism (rinichi, vezica urinară)</li>
+          <li><strong>Sistemul reproducător</strong> - asigură continuarea speciei (organe genitale masculine și feminine)</li>
+          <li><strong>Sistemul nervos</strong> - coordonează activitățile organismului (creier, măduva spinării, nervi)</li>
+        </ul>
+      </li>
+      <li>Funcțiile vitale ale organismelor se împart în trei categorii:
+        <ul>
+          <li><strong>Funcții de nutriție</strong> - respirația, digestia, circulația, excreția</li>
+          <li><strong>Funcții de relație</strong> - sistemul nervos, organele de simț, mișcarea</li>
+          <li><strong>Funcții de reproducere</strong> - perpetuarea speciei prin formarea de descendenți</li>
+        </ul>
+      </li>
+      <li>Organele nu funcționează independent - ele colaborează în cadrul sistemelor pentru menținerea vieții.</li>
+      <li>Adaptarea organelor la mediu și funcție este rezultatul evoluției pe perioade lungi de timp.</li>
+    </ul>
+  </div>
+
+  <h2>📝 Test – 9 itemi</h2>
+
+  <div class="intrebare">
+    <p><strong>1. Ce organ vegetal realizează fotosinteza?</strong></p>
+    <div class="raspunsuri">
+      <button onclick="verifica(this, true)">Frunza</button>
+      <button onclick="verifica(this, false)">Tulpina</button>
+      <button onclick="verifica(this, false)">Floarea</button>
+      <button onclick="verifica(this, false)">Rădăcina</button>
+    </div>
+  </div>
+
+  <div class="intrebare">
+    <p><strong>2. Ce organ animal este responsabil cu pomparea sângelui?</strong></p>
+    <div class="raspunsuri">
+      <button onclick="verifica(this, false)">Plămânul</button>
+      <button onclick="verifica(this, false)">Ficatul</button>
+      <button onclick="verifica(this, true)">Inima</button>
+      <button onclick="verifica(this, false)">Rinichiul</button>
+    </div>
+  </div>
+
+  <div class="intrebare">
+    <p><strong>3. Completează: Rădăcina are rol de __________ și absorbție.</strong></p>
+    <input id="c1" placeholder="răspunsul tău" type="text"/>
+    <button onclick="verificaCompletare('c1', 'fixare')">Verifică</button>
+    <p class="feedback" id="f1"></p>
+  </div>
+
+  <div class="intrebare">
+    <p><strong>4. Alege organele implicate în funcția de relație:</strong></p>
+    <label><input id="cb1" type="checkbox"> Sistem nervos</label><br/>
+    <label><input id="cb2" type="checkbox"/> Sistem reproducător</label><br/>
+    <label><input id="cb3" type="checkbox"/> Organe de simț</label><br/>
+    <label><input id="cb4" type="checkbox"/> Sistem circulator</label><br/>
+    <button onclick="verificaCheckbox()">Verifică</button>
+    <p class="feedback" id="f2"></p>
+  </div>
+
+  <div class="intrebare">
+    <p><strong>5. Completează: Organul reproducător al plantelor este __________.</strong></p>
+    <input id="c2" placeholder="răspunsul tău" type="text"/>
+    <button onclick="verificaCompletare('c2', 'floarea')">Verifică</button>
+    <p class="feedback" id="f3"></p>
+  </div>
+
+  <div class="intrebare">
+    <p><strong>6. Ce este un organ?</strong></p>
+    <input id="r1" placeholder="răspunsul tău" type="text"/>
+    <button onclick="verificaScurt()">Verifică</button>
+    <p class="feedback" id="f4"></p>
+  </div>
+
+  <div class="intrebare">
+    <p><strong>7. Asociază fiecare organ cu funcția principală:</strong></p>
+    <label>Frunza → 
+      <select id="a1">
+        <option value="">Selectează</option>
+        <option value="fotosinteza">Fotosinteză</option>
+        <option value="reproducere">Reproducere</option>
+      </select>
+    </label><br/>
+    <label>Floarea → 
+      <select id="a2">
+        <option value="">Selectează</option>
+        <option value="fotosinteza">Fotosinteză</option>
+        <option value="reproducere">Reproducere</option>
+      </select>
+    </label><br/>
+    <button onclick="verificaAsociere()">Verifică</button>
+    <p class="feedback" id="f5"></p>
+  </div>
+
+  <div class="intrebare">
+    <p><strong>8. Completează: Sistemul respirator are rolul de a asigura schimbul de __________.</strong></p>
+    <input id="oxigen" placeholder="răspunsul tău" type="text"/>
+    <button onclick="verificaCompletare('oxigen', 'gaze')">Verifică</button>
+    <p class="feedback" id="f6"></p>
+  </div>
+
+  <div class="intrebare">
+    <p><strong>9. Asociază fiecare organ cu funcția principală:</strong></p>
+    <label>Rinichi →
+      <select id="a_org1">
+        <option value="">Selectează</option>
+        <option value="filtrare">Filtrarea sângelui</option>
+        <option value="digestie">Digestie</option>
+      </select>
+    </label><br/>
+    <label>Stomac →
+      <select id="a_org2">
+        <option value="">Selectează</option>
+        <option value="filtrare">Filtrarea sângelui</option>
+        <option value="digestie">Digestie</option>
+      </select>
+    </label><br/>
+    <button onclick="verificaAsociereOrgane()">Verifică</button>
+    <p class="feedback" id="f7"></p>
+  </div>
+
+  <button onclick="afiseazaFeedbackFinal()">✅ Vezi rezultatul final</button>
+  <p class="rezultat" id="rezultatFinal"></p>
+  <a class="back" href="../index.html">← Înapoi la meniu</a>
+</div>
+
+<script>
+let scor = 0;
+let completari = {};
+
+function verifica(elem, corect) {
+  elem.disabled = true;
+  elem.classList.remove('corect', 'gresit');
+  elem.classList.add(corect ? 'corect' : 'gresit');
+  elem.parentElement.querySelectorAll('button').forEach(b => b.disabled = true);
+  if (corect) scor++;
+}
+
+function verificaCompletare(id, rasp) {
+  const val = document.getElementById(id).value.trim().toLowerCase();
+  const feedbackIds = {
+    'c1': 'f1',
+    'c2': 'f3', 
+    'oxigen': 'f6'
+  };
+  const f = document.getElementById(feedbackIds[id]);
+  const esteCorect = val === rasp.toLowerCase();
+  f.innerText = esteCorect ? '✔️ Corect' : `❌ Răspuns corect: ${rasp}`;
+  f.style.color = esteCorect ? 'green' : 'red';
+  if (!completari[id] && esteCorect) { 
+    scor++; 
+    completari[id] = true; 
+  }
+}
+
+function verificaCheckbox() {
+  const r = [true, false, true, false]; // Sistem nervos și organe de simț sunt pentru relație
+  const a = [
+    document.getElementById('cb1').checked, 
+    document.getElementById('cb2').checked, 
+    document.getElementById('cb3').checked, 
+    document.getElementById('cb4').checked
+  ];
+  const f = document.getElementById('f2');
+  const e = JSON.stringify(r) === JSON.stringify(a);
+  f.innerText = e ? '✔️ Corect' : '❌ Corect: sistem nervos și organe de simț.';
+  f.style.color = e ? 'green' : 'red';
+  if (e && !completari['checkbox']) { 
+    scor++; 
+    completari['checkbox'] = true; 
+  }
+}
+
+function verificaScurt() {
+  const val = document.getElementById('r1').value.toLowerCase();
+  const f = document.getElementById('f4');
+  const cheiUvinte = ['țesut', 'func', 'grup'];
+  const esteCorect = cheiUvinte.some(cuv => val.includes(cuv));
+  
+  if (esteCorect) {
+    f.innerText = '✔️ Corect';
+    f.style.color = 'green';
+    if (!completari['r1']) {
+      scor++;
+      completari['r1'] = true;
+    }
+  } else {
+    f.innerText = '❌ Răspuns corect: Un organ este o grupare de țesuturi care îndeplinește o funcție în organism.';
+    f.style.color = 'red';
+  }
+}
+
+function verificaAsociere() {
+  const a1 = document.getElementById('a1').value;
+  const a2 = document.getElementById('a2').value;
+  const f = document.getElementById('f5');
+  const e = (a1 === 'fotosinteza' && a2 === 'reproducere');
+  f.innerText = e ? '✔️ Corect' : '❌ Frunza → fotosinteză, Floarea → reproducere.';
+  f.style.color = e ? 'green' : 'red';
+  if (e && !completari['asociere']) {
+    scor++;
+    completari['asociere'] = true;
+  }
+}
+
+function verificaAsociereOrgane() {
+  const r1 = document.getElementById('a_org1').value;
+  const r2 = document.getElementById('a_org2').value;
+  const f = document.getElementById('f7');
+  const e = (r1 === 'filtrare' && r2 === 'digestie');
+  f.innerText = e ? '✔️ Corect' : '❌ Rinichi → filtrare, Stomac → digestie';
+  f.style.color = e ? 'green' : 'red';
+  if (e && !completari['asocorg']) {
+    scor++;
+    completari['asocorg'] = true;
+  }
+}
+
+async function adaugaXP(puncte) {
+  // Simulare salvare XP (în mediul real ar fi conectat la Firebase)
+  console.log(`XP adăugat: ${puncte}`);
+  // Aici ar fi codul pentru Firebase din originalul tău
+}
+
+function afiseazaFeedbackFinal() {
+  const procent = (scor / 9) * 100;
+  let mesaj = '';
+  if (procent >= 90) mesaj = '🌟 Excelent! Ai înțeles foarte bine materia!';
+  else if (procent >= 70) mesaj = '👍 Bine! Mai exersează câteva concepte.';
+  else if (procent >= 50) mesaj = '🙂 Mai este loc de îmbunătățire. Recitește lecția.';
+  else mesaj = '⚠️ Îți recomandăm să reiei teoria pas cu pas.';
+  document.getElementById('rezultatFinal').innerText = `${mesaj} Ai obținut ${scor} din 9 răspunsuri corecte.`;
+
+  const xpDeAdaugat = scor * 10; // 10 XP pe răspuns corect
+  adaugaXP(xpDeAdaugat);
+}
+
+// Google Translate init
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'ro',
+    includedLanguages: 'en,hu',
+    layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+  }, 'google_translate_element');
+}
+
+// Text-to-Speech (TTS)
+const ttsButton = document.getElementById('tts-button');
+let synth = window.speechSynthesis;
+let voceCitita = false;
+
+ttsButton.addEventListener('click', () => {
+  if (voceCitita) {
+    synth.cancel();
+    ttsButton.textContent = "🔊 Ascultă";
+    voceCitita = false;
+  } else {
+    let text = document.getElementById('teorie-esentiala').innerText;
+    let utterThis = new SpeechSynthesisUtterance(text);
+    utterThis.lang = 'ro-RO';
+    utterThis.rate = 1;
+    utterThis.pitch = 1;
+    utterThis.onend = () => {
+      ttsButton.textContent = "🔊 Ascultă";
+      voceCitita = false;
+    };
+    synth.speak(utterThis);
+    ttsButton.textContent = "⏸️ Oprește";
+    voceCitita = true;
+  }
+});
+</script>
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+</html>

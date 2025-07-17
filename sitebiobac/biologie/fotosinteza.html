@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link rel="manifest" href="/manifest.json">
+<title>BioBAC – Lecția: Fotosinteza</title>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<!-- Activare dark mode din localStorage -->
+<script>
+    if (localStorage.getItem('tema') === 'dark') {
+      document.documentElement.classList.add('dark');
+    }
+</script>
+
+<style>
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #e8f5e9;
+    padding: 20px;
+    margin: 0;
+    color: #000;
+  }
+  .container {
+    max-width: 800px;
+    background: white;
+    padding: 20px;
+    margin: auto;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    position: relative;
+  }
+  h1, h2 { color: #1b5e20; }
+  ul { text-align: left; }
+  .intrebare { margin: 15px 0; text-align: left; }
+  .raspunsuri button {
+    display: block;
+    margin: 5px 0;
+    padding: 8px;
+    width: 100%;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    background-color: #f0f0f0;
+    color: #000;
+  }
+  .raspunsuri button.corect {
+    background-color: #c8e6c9;
+    color: #2e7d32;
+    border: none;
+  }
+  .raspunsuri button.gresit {
+    background-color: #ffcdd2;
+    color: #c62828;
+    border: none;
+  }
+  .feedback { font-weight: bold; margin-top: 10px; }
+  input[type=text], select {
+    width: 100%;
+    padding: 8px;
+    margin: 5px 0;
+  }
+  a.back {
+    display: inline-block;
+    margin-top: 20px;
+    color: #1b5e20;
+    font-weight: bold;
+    text-decoration: none;
+  }
+  .rezultat {
+    background-color: #fff9c4;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 20px;
+    font-size: 18px;
+  }
+
+  /* Google Translate container */
+  #google_translate_element {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    z-index: 10;
+    text-align: right;
+  }
+
+  /* DARK MODE */
+  .dark body, .dark {
+    background-color: #121212 !important;
+    color: #e0e0e0 !important;
+  }
+  .dark .container {
+    background-color: #1e1e1e !important;
+    box-shadow: 0 0 10px rgba(255,255,255,0.1) !important;
+  }
+  .dark .raspunsuri button {
+    background-color: #2c2c2c !important;
+    color: white !important;
+  }
+  .dark .raspunsuri button.corect {
+    background-color: #388e3c !important;
+    color: white !important;
+    border: none !important;
+  }
+  .dark .raspunsuri button.gresit {
+    background-color: #d32f2f !important;
+    color: white !important;
+    border: none !important;
+  }
+  .dark .rezultat { background-color: #333 !important; }
+  .dark a.back { color: #81c784 !important; }
+
+  /* Google Translate styling */
+  .goog-te-banner-frame.skiptranslate {
+    display: none !important;
+  }
+  body { top: 0 !important; }
+
+  #google_translate_element {
+  margin-top: 5px;
+}
+
+#tts-button {
+  background-color: #1b5e20;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-weight: bold;
+  margin: 10px 0;
+}
+.dark #tts-button {
+  background-color: #81c784;
+  color: #121212;
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Google Translate -->
+  <div id="google_translate_element"></div>
+
+  <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+  <button id="tts-button" title="Ascultă teoria esențială">🔊 Ascultă</button>
+  <div id="google_translate_element"></div>
+</div>
+<h1>🌿 BioBAC – Lecția: Fotosinteza</h1>
+
+  <h2>🧠 Teorie esențială</h2>
+  <div id="teorie-esentiala">
+    <ul>
+      <li>Fotosinteza este procesul biologic fundamental prin care organismele fotosintetice (plante, alge, unele bacterii) transformă energia solară în energie chimică sub formă de glucoză.</li>
+      <li>Procesul se desfășoară în organitele specializate numite <strong>cloroplaste</strong>, prezente în celulele vegetale:
+        <ul>
+          <li><strong>Cloroplasta</strong> - organita celulară cu dublă membrană care conține clorofila</li>
+          <li><strong>Tilacoizii</strong> - structuri membranare în formă de saci unde se află pigmenții fotosintetici</li>
+          <li><strong>Grana</strong> - structuri formate din mai mulți tilacoizi suprapuși</li>
+          <li><strong>Stroma</strong> - substanța în care sunt înconjurați tilacoizii, conține enzime pentru sinteza glucozei</li>
+        </ul>
+      </li>
+      <li>Fotosinteza se realizează în două faze distincte dar interdependente:
+        <ul>
+          <li><strong>Faza luminoasă (fotochimică)</strong> - are loc în membrana tilacoizilor în prezența luminii solare</li>
+          <li><strong>Faza întunecată (biochimică)</strong> - se desfășoară în stroma cloroplastei, nu necesită direct lumina</li>
+        </ul>
+      </li>
+      <li>Pigmenții fotosintetici sunt molecule care absorb energia luminoasă:
+        <ul>
+          <li><strong>Clorofila a</strong> - pigmentul principal, absoarbe lumina roșie și albastru-violet</li>
+          <li><strong>Clorofila b</strong> - pigment accesoriu, extinde spectrul de absorbție</li>
+          <li><strong>Carotenoizii</strong> - pigmenți galbeni și oranjii, protejează clorofila de degradare</li>
+          <li><strong>Xantofilele</strong> - pigmenți galbeni care participă la captarea luminii</li>
+        </ul>
+      </li>
+      <li>Faza luminoasă cuprinde următoarele etape:
+        <ul>
+          <li><strong>Absorbția luminii</strong> - clorofila captează fotoni și excită electronii</li>
+          <li><strong>Fotoliză apei</strong> - descompunerea moleculelor de H₂O în hidrogen și oxigen</li>
+          <li><strong>Producerea ATP</strong> - sinteza adenozin trifosfatului, sursa principală de energie</li>
+          <li><strong>Formarea NADPH</strong> - coenzimă care transportă electronii și hidrogenul</li>
+          <li><strong>Eliberarea oxigenului</strong> - O₂ se eliberează ca produs secundar în atmosferă</li>
+        </ul>
+      </li>
+      <li>Faza întunecată (Ciclul Calvin-Benson) include:
+        <ul>
+          <li><strong>Fixarea carbonului</strong> - CO₂ din atmosferă se combină cu ribuloza-1,5-bisfosfat</li>
+          <li><strong>Reducerea carbonului</strong> - folosind ATP și NADPH din faza luminoasă</li>
+          <li><strong>Regenerarea ribulozei</strong> - pentru continuarea ciclului</li>
+          <li><strong>Formarea glucozei</strong> - produsul final al fotosintezei (C₆H₁₂O₆)</li>
+        </ul>
+      </li>
+      <li>Ecuația chimică completă a fotosintezei:
+        <ul>
+          <li><strong>6CO₂ + 6H₂O + energie luminoasă → C₆H₁₂O₆ + 6O₂ + 6H₂O</strong></li>
+          <li>Substanțele inițiale: dioxid de carbon, apă, energia solară</li>
+          <li>Produsele finale: glucoza, oxigenul, apa</li>
+        </ul>
+      </li>
+      <li>Factorii care influențează intensitatea fotosintezei:
+        <ul>
+          <li><strong>Intensitatea luminii</strong> - mai multă lumină crește rata fotosintezei până la un punct de saturație</li>
+          <li><strong>Concentrația CO₂</strong> - mai mult dioxid de carbon accelerează procesul</li>
+          <li><strong>Temperatura</strong> - temperaturi optime (20-30°C) pentru activitatea enzimelor</li>
+          <li><strong>Disponibilitatea apei</strong> - apa este necesară pentru fotoliza și transportul substanțelor</li>
+          <li><strong>Concentrația clorofilei</strong> - mai mult pigment înseamnă mai multă absorbție de lumină</li>
+        </ul>
+      </li>
+      <li>Importanța biologică și ecologică a fotosintezei:
+        <ul>
+          <li><strong>Producția de oxigen</strong> - 70% din oxigenul atmosferic provine din fotosinteză</li>
+          <li><strong>Baza lanțurilor trofice</strong> - plantele sunt producătorii primari în ecosisteme</li>
+          <li><strong>Ciclul carbonului</strong> - îndepărtează CO₂ din atmosferă, reducând efectul de seră</li>
+          <li><strong>Stocarea energiei</strong> - convertește energia solară în forme utilizabile de organisme</li>
+        </ul>
+      </li>
+      <li>Relația dintre fotosinteză și respirația celulară:
+        <ul>
+          <li><strong>Procese complementare</strong> - fotosinteza produce glucoză, respirația o descompune</li>
+          <li><strong>Schimbul de gaze</strong> - fotosinteza consumă CO₂ și produce O₂, respirația face invers</li>
+          <li><strong>Ciclul diurn</strong> - ziua predomină fotosinteza, noaptea respirația</li>
+          <li><strong>Echilibrul energetic</strong> - plantele își satisfac nevoile energetice prin ambele procese</li>
+        </ul>
+      </li>
+      <li>Tipuri speciale de fotosinteză:
+        <ul>
+          <li><strong>Fotosinteza C₄</strong> - adaptare la climatul tropical, mai eficientă la temperaturi ridicate</li>
+          <li><strong>Fotosinteza CAM</strong> - specifică plantelor de deșert, deschid stomatele noaptea</li>
+          <li><strong>Fotosinteza bacteriană</strong> - folosește alți donatori de electroni decât apa</li>
+        </ul>
+      </li>
+      <li>Aplicații practice și tehnologice:
+        <ul>
+          <li><strong>Agricultura</strong> - optimizarea condițiilor pentru creșterea randamentului culturilor</li>
+          <li><strong>Fotosinteza artificială</strong> - tehnologii pentru producerea de combustibili solari</li>
+          <li><strong>Monitorizarea mediului</strong> - folosirea fotosintezei ca indicator al sănătății ecosistemelor</li>
+          <li><strong>Biotehnologia</strong> - modificarea plantelor pentru eficiență fotosintezei îmbunătățită</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <h2>📝 Test – 9 itemi</h2>
+
+  <!-- Exerciții -->
+  <div class="intrebare"><p><strong>1. Ce pigment principal este implicat în fotosinteză?</strong></p>
+    <div class="raspunsuri">
+      <button onclick="verifica(this, true)">Clorofila</button>
+      <button onclick="verifica(this, false)">Melanina</button>
+      <button onclick="verifica(this, false)">Hemoglobina</button>
+      <button onclick="verifica(this, false)">Karoten</button>
+    </div>
+  </div>
+
+  <div class="intrebare"><p><strong>2. Unde are loc faza întunecată?</strong></p>
+    <div class="raspunsuri">
+      <button onclick="verifica(this, true)">Stromă</button>
+      <button onclick="verifica(this, false)">Tilacoide</button>
+      <button onclick="verifica(this, false)">Nucleu</button>
+      <button onclick="verifica(this, false)">Citoplasmă</button>
+    </div>
+  </div>
+
+  <div class="intrebare"><p><strong>3. Completează: Glucoza este produsă în faza __________ a fotosintezei.</strong></p>
+    <input id="c1" type="text"/>
+    <button onclick="verificaCompletare('c1', 'întunecată')">Verifică</button>
+    <p class="feedback" id="f1"></p>
+  </div>
+
+  <div class="intrebare"><p><strong>4. Alege componentele implicate în faza luminoasă:</strong></p>
+    <label><input id="v1" type="checkbox"> Tilacoide</input></label><br/>
+    <label><input id="v2" type="checkbox"/> Stromă</label><br/>
+    <label><input id="v3" type="checkbox"/> Clorofilă</label><br/>
+    <label><input id="v4" type="checkbox"/> Nucleu</label><br/>
+    <button onclick="verificaCheckbox()">Verifică</button>
+    <p class="feedback" id="f2"></p>
+  </div>
+
+  <div class="intrebare"><p><strong>5. Completează: Gazul eliberat în timpul fotosintezei este __________.</strong></p>
+    <input id="c2" type="text"/>
+    <button onclick="verificaCompletare('c2', 'oxigen')">Verifică</button>
+    <p class="feedback" id="f3"></p>
+  </div>
+
+  <div class="intrebare"><p><strong>6. Ce este fotosinteza?</strong></p>
+    <input id="c3" type="text"/>
+    <button onclick="verificaScurt('c3')">Verifică</button>
+    <p class="feedback" id="f4"></p>
+  </div>
+
+  <div class="intrebare"><p><strong>7. Asociază componentele cu rolul lor:</strong></p>
+    <label>Tilacoide →
+      <select id="a1">
+        <option value="">Selectează</option>
+        <option value="luminoasa">Faza luminoasă</option>
+        <option value="intunecata">Faza întunecată</option>
+      </select>
+    </label><br/>
+    <label>Stromă →
+      <select id="a2">
+        <option value="">Selectează</option>
+        <option value="luminoasa">Faza luminoasă</option>
+        <option value="intunecata">Faza întunecată</option>
+      </select>
+    </label><br/>
+    <button onclick="verificaAsociere()">Verifică</button>
+    <p class="feedback" id="f5"></p>
+  </div>
+
+  <div class="intrebare"><p><strong>8. Completează: Fotosinteza are loc doar în prezența __________ și lumină.</strong></p>
+    <input id="c4" type="text"/>
+    <button onclick="verificaCompletare('c4', 'clorofilei')">Verifică</button>
+    <p class="feedback" id="f6"></p>
+  </div>
+
+  <div class="intrebare"><p><strong>9. Asociază fiecare componentă cu rolul său:</strong></p>
+    <label>Clorofila →
+      <select id="a3">
+        <option value="">Selectează</option>
+        <option value="absorbtie">Absorbția luminii</option>
+        <option value="eliberare">Eliberarea oxigenului</option>
+      </select>
+    </label><br/>
+    <label>Oxigen →
+      <select id="a4">
+        <option value="">Selectează</option>
+        <option value="absorbtie">Absorbția luminii</option>
+        <option value="eliberare">Eliberarea oxigenului</option>
+      </select>
+    </label><br/>
+    <button onclick="verificaAsociereExtra()">Verifică</button>
+    <p class="feedback" id="f7"></p>
+  </div>
+
+  <button onclick="afiseazaFeedbackFinal()">✅ Vezi rezultatul final</button>
+  <p class="rezultat" id="rezultatFinal"></p>
+  <a class="back" href="../index.html">← Înapoi la meniu</a>
+</div>
+
+<script>
+let scor = 0;
+let completari = {};
+
+function verifica(elem, corect) {
+  elem.disabled = true;
+  elem.classList.remove('corect', 'gresit');
+  elem.classList.add(corect ? 'corect' : 'gresit');
+  elem.parentElement.querySelectorAll('button').forEach(b => b.disabled = true);
+  if (corect) scor++;
+}
+
+function verificaCompletare(id, rasp) {
+  const val = document.getElementById(id).value.trim().toLowerCase();
+  const f = document.getElementById('f' + id.slice(1));
+  const esteCorect = val === rasp.toLowerCase();
+  f.innerText = esteCorect ? '✔️ Corect' : `❌ Răspuns corect: ${rasp}`;
+  f.style.color = esteCorect ? 'green' : 'red';
+  if (!completari[id] && esteCorect) { scor++; completari[id] = true; }
+}
+
+function verificaCheckbox() {
+  const r = [true, false, true, false]; // Tilacoide, Stromă, Clorofilă, Nucleu
+  const a = [v1.checked, v2.checked, v3.checked, v4.checked];
+  const f = document.getElementById('f2');
+  const e = JSON.stringify(r) === JSON.stringify(a);
+  f.innerText = e ? '✔️ Corect' : '❌ Verifică componentele implicate în faza luminoasă.';
+  f.style.color = e ? 'green' : 'red';
+  if (e && !completari['luminoasa']) { scor++; completari['luminoasa'] = true; }
+}
+
+function verificaScurt(id) {
+  const val = document.getElementById(id).value.trim().toLowerCase();
+  const f = document.getElementById('f4');
+  const esteCorect = val.includes("energie") && val.includes("solar") && val.includes("chemic");
+  f.innerText = esteCorect ? '✔️ Corect' : '❌ Răspuns corect: Procesul de transformare a energiei solare în energie chimică.';
+  f.style.color = esteCorect ? 'green' : 'red';
+  if (esteCorect && !completari[id]) { scor++; completari[id] = true; }
+}
+
+function verificaAsociere() {
+  const a1 = document.getElementById('a1').value;
+  const a2 = document.getElementById('a2').value;
+  const f = document.getElementById('f5');
+  const e = a1 === 'luminoasa' && a2 === 'intunecata';
+  f.innerText = e ? '✔️ Corect' : '❌ Tilacoide → luminoasă, Stromă → întunecată';
+  f.style.color = e ? 'green' : 'red';
+  if (e && !completari['asociere1']) { scor++; completari['asociere1'] = true; }
+}
+
+function verificaAsociereExtra() {
+  const a3 = document.getElementById('a3').value;
+  const a4 = document.getElementById('a4').value;
+  const f = document.getElementById('f7');
+  const e = a3 === 'absorbtie' && a4 === 'eliberare';
+  f.innerText = e ? '✔️ Corect' : '❌ Clorofila → absorbție, Oxigen → eliberare';
+  f.style.color = e ? 'green' : 'red';
+  if (e && !completari['asociere2']) { scor++; completari['asociere2'] = true; }
+}
+
+async function adaugaXP(puncte) {
+  const user = auth.currentUser;
+  if (!user) {
+    console.log("Nu ești logat, nu se poate salva progresul.");
+    return;
+  }
+  const uid = user.uid;
+  const docRef = db.collection("progres_utilizatori").doc(uid);
+  try {
+    const doc = await docRef.get();
+    if (!doc.exists) {
+      await docRef.set({ nivel: 1, xp: 0 });
+    }
+    let data = (await docRef.get()).data();
+    let xp = data.xp || 0;
+    let nivel = data.nivel || 1;
+    const maxXp = nivel * 100;
+
+    xp += puncte;
+
+    if (xp >= maxXp) {
+      nivel++;
+      xp = xp - maxXp;
+      alert(`Felicitări! Ai urcat la nivelul ${nivel}!`);
+    }
+
+    await docRef.update({ nivel, xp });
+    console.log(`Progres salvat: Nivel ${nivel}, XP ${xp}/${nivel*100}`);
+  } catch (e) {
+    console.error("Eroare salvare progres:", e);
+  }
+}
+
+function afiseazaFeedbackFinal() {
+  const procent = (scor / 9) * 100;
+  let mesaj = '';
+  if (procent >= 90) mesaj = '🌟 Excelent! Ai înțeles foarte bine materia!';
+  else if (procent >= 70) mesaj = '👍 Bine! Mai exersează câteva concepte.';
+  else if (procent >= 50) mesaj = '🙂 Mai este loc de îmbunătățire. Recitește lecția.';
+  else mesaj = '⚠️ Îți recomandăm să reiei teoria pas cu pas.';
+  document.getElementById('rezultatFinal').innerText = `${mesaj} Ai obținut ${scor} din 9 răspunsuri corecte.`;
+
+  const xpDeAdaugat = scor * 10; // 10 XP pe răspuns corect
+  adaugaXP(xpDeAdaugat);
+}
+
+// Google Translate init
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'ro',
+    includedLanguages: 'en,hu',
+    layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+  }, 'google_translate_element');
+}
+
+// Service Worker (PWA)
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/sw.js")
+    .then(reg => console.log("✅ Service Worker activat!", reg))
+    .catch(err => console.error("❌ Eroare la SW:", err));
+}
+
+// Firebase config și inițializare
+const firebaseConfig = {
+  apiKey: "AIzaSyA5C-UQTHOO7CFrbzV7vMXfQTrM1iz0_CE",
+  authDomain: "biobac-cont.firebaseapp.com",
+  projectId: "biobac-cont",
+  storageBucket: "biobac-cont.appspot.com",
+  messagingSenderId: "59421729279",
+  appId: "1:59421729279:web:142fbafcc1f22c9b5ac7ca"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+// Text-to-Speech (TTS)
+const ttsButton = document.getElementById('tts-button');
+let synth = window.speechSynthesis;
+let voceCitita = false;
+
+ttsButton.addEventListener('click', () => {
+  if (voceCitita) {
+    synth.cancel();
+    ttsButton.textContent = "🔊 Ascultă";
+    voceCitita = false;
+  } else {
+    let text = document.getElementById('teorie-esentiala').innerText;
+    let utterThis = new SpeechSynthesisUtterance(text);
+    utterThis.lang = 'ro-RO';
+    utterThis.rate = 1;
+    utterThis.pitch = 1;
+    utterThis.onend = () => {
+      ttsButton.textContent = "🔊 Ascultă";
+      voceCitita = false;
+    };
+    synth.speak(utterThis);
+    ttsButton.textContent = "⏸️ Oprește";
+    voceCitita = true;
+  }
+});
+</script>
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<script src="settings.js"></script>
+</body>
+</html>

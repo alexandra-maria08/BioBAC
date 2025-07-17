@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+
+<html lang="ro">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>BioBAC – Neuron AR</title>
+<script src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js" type="module"></script>
+<style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #eef9f0;
+      color: #000;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    body.dark {
+      background-color: #121212;
+      color: #e0e0e0;
+    }
+    h1 {
+      background-color: #256c46;
+      color: white;
+      padding: 20px;
+      margin: 0;
+    }
+    p {
+      font-size: 1.1em;
+      padding: 10px 30px;
+    }
+    model-viewer {
+      width: 100%;
+      height: 90vh;
+      background-color: #ffffff;
+    }
+    body.dark model-viewer {
+      background-color: #1e1e1e;
+    }
+    .ar-button {
+      margin-top: 20px;
+      padding: 14px 28px;
+      font-size: 1.2em;
+      background-color: #256c46;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+    .labels {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+    .label-btn {
+      padding: 10px 20px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1em;
+    }
+    #info {
+      margin-top: 20px;
+      font-size: 1.1em;
+      color: #333;
+    }
+    body.dark #info {
+      color: #ccc;
+    }
+    .back-btn {
+      display: inline-block;
+      margin: 30px auto;
+      padding: 10px 20px;
+      background: #256c46;
+      color: white;
+      border-radius: 8px;
+      text-decoration: none;
+    }
+    /* Google Translate container style */
+    #google_translate_element {
+      margin: 20px auto;
+      max-width: 200px;
+      text-align: center;
+    }
+  </style>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('tema') === 'dark') {
+        document.body.classList.add('dark');
+      }
+    });
+
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'ro',
+        includedLanguages: 'en,hu',
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+      }, 'google_translate_element');
+    }
+
+    function showInfo(text) {
+      document.getElementById('info').innerText = text;
+    }
+  </script>
+<script async="" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<link href="/manifest.json" rel="manifest"/></head>
+<body>
+<div id="google_translate_element"></div>
+<h1>🧠 BioBAC – Neuron AR</h1>
+<p>Explorează un model 3D al unei celule neuronale în AR.</p>
+<model-viewer ar="" ar-modes="scene-viewer webxr quick-look" auto-rotate="" background-color="#ffffff" camera-controls="" exposure="1.3" id="model" ios-src="Neuronal_Cell_Environment.usdz" shadow-intensity="1" src="neuronal_cell_environment.glb">
+</model-viewer>
+<button class="ar-button" onclick="document.querySelector('#model').activateAR()">🔍 Vizualizează în AR</button>
+<div class="labels">
+<button class="label-btn" onclick="showInfo('Conține nucleul și este centrul metabolic al neuronului.')">Corpul celular</button>
+<button class="label-btn" onclick="showInfo('Transmite impulsul nervos către alți neuroni sau organe.')">Axon</button>
+<button class="label-btn" onclick="showInfo('Recepționează semnale de la alți neuroni.')">Dendrite</button>
+<button class="label-btn" onclick="showInfo('Punctul de conexiune între doi neuroni.')">Sinapsă</button>
+<button class="label-btn" onclick="showInfo('Izolează axonul și accelerează transmiterea impulsului.')">Teacă de mielină</button>
+</div>
+<div id="info"></div>
+<a class="back-btn" href="index.html">← Înapoi la Meniu</a>
+<script>if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/sw.js")
+    .then(reg => console.log("✅ Service Worker activat!", reg))
+    .catch(err => console.error("❌ Eroare la SW:", err));
+}</script></body>
+</html>
