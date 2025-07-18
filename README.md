@@ -1,10 +1,6 @@
-<p align="center">
-  <img src="downloads/biobac3.png" width="400" />
-  <img src="downloads/biobac2.png" width="400" />
-  <img src="downloads/biobac1.png" width="400" /><br>
-  <img src="downloads/2.png" width="400" />
-  <img src="downloads/1.png" width="400" />
-</p>
+> ⚠️ Pentru a vizualiza imaginile, descărcați documentul complet:  
+> [📄 Documentatie_BioBAC_Nationala.docx](Documentatie_BioBAC_Nationala.docx)
+
 
 ---
 
